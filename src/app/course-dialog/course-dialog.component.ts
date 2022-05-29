@@ -7,6 +7,7 @@ import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { CourseService } from '../services/courses.service';
 import { LoadingService } from '../loading/loading.service';
+import { MessagesService } from '../messages/messages.service';
 
 
 // this component initiated with angular material dialog event
@@ -16,7 +17,7 @@ import { LoadingService } from '../loading/loading.service';
     selector: 'course-dialog',
     templateUrl: './course-dialog.component.html',
     styleUrls: ['./course-dialog.component.css'],
-    providers: [LoadingService]  // this will create local instance of loading service which accessible to course-dialog and its child component
+    providers: [LoadingService, MessagesService]  // this will create local instance of service which accessible to course-dialog and its child component
 })
 export class CourseDialogComponent implements AfterViewInit {
 
@@ -29,6 +30,7 @@ export class CourseDialogComponent implements AfterViewInit {
         private dialogRef: MatDialogRef<CourseDialogComponent>,
         private courseService: CourseService,
         private loadingService: LoadingService,
+        private messageService: MessagesService,
         @Inject(MAT_DIALOG_DATA) course: Course) {
 
         this.course = course;
@@ -53,7 +55,15 @@ export class CourseDialogComponent implements AfterViewInit {
         const changes = this.form.value;
 
         const saveCoures$ = this.courseService.saveCourse(this.course.id, changes)
-        
+            .pipe(
+                catchError((err)=>{
+                    const message = "could not save course";
+                    console.log(message, err);
+                    this.messageService.showErrors(message);
+                    return throwError(err);
+                })
+            )
+
         this.loadingService.showLoaderUntilCompleted(saveCoures$).subscribe(
             (val) => {
                 this.dialogRef.close(val);

@@ -8,6 +8,7 @@ import { throwError } from 'rxjs';
 import { CourseService } from '../services/courses.service';
 import { LoadingService } from '../loading/loading.service';
 import { MessagesService } from '../messages/messages.service';
+import { CourseStore } from '../services/courses.store';
 
 
 // this component initiated with angular material dialog event
@@ -28,8 +29,7 @@ export class CourseDialogComponent implements AfterViewInit {
     constructor(
         private fb: FormBuilder,
         private dialogRef: MatDialogRef<CourseDialogComponent>,
-        private courseService: CourseService,
-        private loadingService: LoadingService,
+        private courseStore: CourseStore,
         private messageService: MessagesService,
         @Inject(MAT_DIALOG_DATA) course: Course) {
 
@@ -42,7 +42,6 @@ export class CourseDialogComponent implements AfterViewInit {
             longDescription: [course.longDescription, Validators.required]
         });
 
-        // this.loadingService.loadingOn();  //This is will enable loading present in course-dailog
 
     }
 
@@ -54,21 +53,9 @@ export class CourseDialogComponent implements AfterViewInit {
 
         const changes = this.form.value;
 
-        const saveCoures$ = this.courseService.saveCourse(this.course.id, changes)
-            .pipe(
-                catchError((err)=>{
-                    const message = "could not save course";
-                    console.log(message, err);
-                    this.messageService.showErrors(message);
-                    return throwError(err);
-                })
-            )
+        this.courseStore.saveCourse(this.course.id, changes).subscribe();
 
-        this.loadingService.showLoaderUntilCompleted(saveCoures$).subscribe(
-            (val) => {
-                this.dialogRef.close(val);
-            }
-        )
+        this.dialogRef.close(changes);
 
 
     }

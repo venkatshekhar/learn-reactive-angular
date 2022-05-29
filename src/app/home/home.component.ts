@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { CourseDialogComponent } from '../course-dialog/course-dialog.component';
 import { CourseService } from '../services/courses.service';
+import { LoadingService } from '../loading/loading.service';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private courseService: CourseService,
+    private loadingService: LoadingService
   ) {
 
   }

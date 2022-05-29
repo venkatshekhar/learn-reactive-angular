@@ -6,7 +6,7 @@ import { Course } from "../model/course";
 
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root'   // global level single instance available throughout the app
 })
 export class CourseService {
 

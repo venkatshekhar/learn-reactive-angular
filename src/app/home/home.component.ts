@@ -27,7 +27,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
 
-    const courses$ = this.courseService.loadAllCourses();
+    const courses$ = this.courseService.loadAllCourses()
+      .pipe(map(courses => courses.sort(sortCoursesBySeqNo)));
 
     this.beginnerCourses$ = courses$
       .pipe(map(courses => courses.filter(course => course.category == "BEGINNER")));

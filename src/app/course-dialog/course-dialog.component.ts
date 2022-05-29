@@ -8,10 +8,15 @@ import { throwError } from 'rxjs';
 import { CourseService } from '../services/courses.service';
 import { LoadingService } from '../loading/loading.service';
 
+
+// this component initiated with angular material dialog event
+// this is not child of app.component
+
 @Component({
     selector: 'course-dialog',
     templateUrl: './course-dialog.component.html',
-    styleUrls: ['./course-dialog.component.css']
+    styleUrls: ['./course-dialog.component.css'],
+    providers: [LoadingService]  // this will create local instance of loading service which accessible to course-dialog and its child component
 })
 export class CourseDialogComponent implements AfterViewInit {
 
@@ -35,6 +40,8 @@ export class CourseDialogComponent implements AfterViewInit {
             longDescription: [course.longDescription, Validators.required]
         });
 
+        // this.loadingService.loadingOn();  //This is will enable loading present in course-dailog
+
     }
 
     ngAfterViewInit() {
@@ -45,8 +52,10 @@ export class CourseDialogComponent implements AfterViewInit {
 
         const changes = this.form.value;
 
-        this.courseService.saveCourse(this.course.id, changes).subscribe(
-            (val) =>{
+        const saveCoures$ = this.courseService.saveCourse(this.course.id, changes)
+        
+        this.loadingService.showLoaderUntilCompleted(saveCoures$).subscribe(
+            (val) => {
                 this.dialogRef.close(val);
             }
         )

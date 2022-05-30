@@ -18,6 +18,7 @@ import {Lesson} from '../model/lesson';
 import { CourseService } from '../services/courses.service';
 
 
+
 @Component({
   selector: 'course',
   templateUrl: './search-lessons.component.html',
@@ -26,6 +27,8 @@ import { CourseService } from '../services/courses.service';
 export class SearchLessonsComponent implements OnInit {
 
   searchResult$: Observable<Lesson[]>;
+  
+  activeLesson: Lesson;
 
   constructor(private courseService: CourseService) {
 
@@ -35,11 +38,20 @@ export class SearchLessonsComponent implements OnInit {
   ngOnInit() {
 
 
+    
+  }
+
+  openLesson(lesson: Lesson){
+    this.activeLesson = lesson
   }
 
   onSearch(search: string){
     this.searchResult$ = this.courseService.searchLessons(search);
 
+  }
+
+  onBackToSearch(){
+    this.activeLesson = null;
   }
 
 }

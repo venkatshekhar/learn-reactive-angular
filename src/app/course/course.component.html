@@ -1,4 +1,4 @@
-
+<ng-container *ngIf="(course$ | async) as course">
   <div class="course">
 
     <h2>{{course?.description}}</h2>
@@ -8,9 +8,9 @@
     <table class="lessons-table mat-elevation-z7">
 
       <thead>
-      <th>#</th>
-      <th>Description</th>
-      <th>Duration</th>
+        <th>#</th>
+        <th>Description</th>
+        <th>Duration</th>
       </thead>
 
       <tr class="lesson-row" *ngFor="let lesson of lessons">
@@ -24,9 +24,4 @@
   </div>
 
 
-
-
-
-
-
-
+</ng-container>

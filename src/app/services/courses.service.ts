@@ -13,6 +13,15 @@ export class CourseService {
 
     constructor(private http: HttpClient) { }
 
+    loadCourseById(courseId: number) {
+        return this.http.get<Course>(`/api/courses/${courseId}`)
+            .pipe(
+                shareReplay()
+            );
+    }
+
+    
+
     loadAllCourses(): Observable<Course[]> {
         return this.http.get<Course[]>('/api/courses')
             .pipe(
@@ -20,6 +29,7 @@ export class CourseService {
                 shareReplay()
             );
     }
+
 
     saveCourse(courseId: string, changes: Partial<Course>): Observable<any> {
 
@@ -29,16 +39,16 @@ export class CourseService {
             );
     }
 
-    searchLessons(search: string): Observable<Lesson[]>{
+    searchLessons(search: string): Observable<Lesson[]> {
         return this.http.get<Lesson[]>('/api/lessons', {
-            params:{
+            params: {
                 filter: search,
                 pageSize: "100"
             }
         })
-        .pipe(
-            map(res => res['payload']),
-            shareReplay()
-        )
+            .pipe(
+                map(res => res['payload']),
+                shareReplay()
+            )
     }
 }
